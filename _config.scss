@@ -1,0 +1,37 @@
+// Utilove
+// -----------------------------------------------------------------------------
+$ul-prefix: "u" !default;
+$ul-modfix: "--" !default;
+$ul-abbr: true !default;
+
+
+// Color
+// -----------------------------------------------------------------------------
+$ul-colors: (
+  "primary": #,
+  "secondary": #,
+  "tertiary": #,
+
+  "success": #4EBA6F,
+  "info": #2D95BF,
+  "warning": #F0C419,
+  "error": #F15A5A,
+
+  "grey-2x-light": #EEEEEE,
+  "grey-x-light": #CCCCCC,
+  "grey-light": #888888,
+  "grey": #666666,
+  "grey-dark": #444444,
+  "grey-x-dark": #222222
+) !default;
+
+$ul-opacities: (
+  "3x-light": 0.2,
+  "2x-light": 0.4,
+  "x-light": 0.6,
+  "light": 0.8
+) !default;
+
+
+// Background-color and border
+// -----------------------------------------------------------------------------

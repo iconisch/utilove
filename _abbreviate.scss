@@ -1,0 +1,88 @@
+// List of possible abbreviations
+// -----------------------------------------------------------------------------
+$_ul-abbrs: (
+  "term": "abbr"
+);
+
+
+// Implode and explode helpers functions taken from SassyStrings
+// @author Hugo Giraudel
+// @link   https://github.com/HugoGiraudel/SassyStrings
+// -----------------------------------------------------------------------------
+@function _ul-explode($string) {
+  $result: ();
+  $running: true;
+  $remaining: $string;
+
+  @while $running {
+    $index: str-index($remaining, "-");
+
+    @if $index {
+      $slice: str-slice($remaining, 1, $index - 1);
+      $result: append($result, $slice);
+      $remaining: str-slice($remaining, $index + str-length("-"));
+    } @else {
+      $running: false;
+    }
+  }
+
+  @return append($result, $remaining);
+}
+
+@function _ul-implode($list) {
+  $result: "";
+
+  @each $item in $list {
+    $result: $result + if(length($item) > 1, _ul-implode($item) + "-", $item);
+  }
+
+  @return $result;
+}
+
+
+// Abbreviating
+// -----------------------------------------------------------------------------
+@function _ul-abbr($term) {
+  // Explode term in to parts
+  $parts: _ul-explode($term);
+  $abbr: "";
+
+  @for $i from 1 through length($parts) {
+    $part: nth($parts, $i);
+
+    // Check if part has abbreviation
+    $part-has-abbr: map-has-key($_ul-abbrs, $part);
+
+    // Check if ends on s and if singular has abbreviation
+    $maybe-plural: str-index($part, "s") == str-length($part);
+    $singlur-has-abbr: map-has-key($_ul-abbrs, str-slice($part, 0, -2));
+
+    // Abbreviate each part if possible
+    @if $part-has-abbr {
+      $abbr: $abbr + map-get($_ul-abbrs, $part);
+    }
+    @else if $maybe-plural and $singlur-has-abbr {
+      $abbr: $abbr + map-get($_ul-abbrs, str-slice($part, 0, -2)) + "s";
+    }
+    @else {
+      $abbr: $abbr + $part;
+    }
+
+    $abbr: $abbr + if($i < length($parts), "-", "");
+  }
+
+  // Implode and return abbreviated parts
+  @return $abbr;
+}
+
+
+// Create selector
+// -----------------------------------------------------------------------------
+@function _ul-sel($prop, $mod) {
+  @if $ul-abbr {
+    @return _ul-abbr($prop) + $ul-modfix + _ul-abbr($mod);
+  }
+  @else {
+    @return $prop + $ul-modfix + $mod;
+  }
+}
